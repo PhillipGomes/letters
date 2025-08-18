@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letters</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400&family=Source+Sans+Pro:wght@300;400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #0f1528 50%, #0a1f3a 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #ffffff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Realistic starfield background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle ease-in-out infinite;
+        }
+
+        .star.small {
+            width: 1px;
+            height: 1px;
+            animation-duration: 3s;
+        }
+
+        .star.medium {
+            width: 2px;
+            height: 2px;
+            animation-duration: 2.5s;
+            box-shadow: 0 0 3px rgba(255, 255, 255, 0.5);
+        }
+
+        .star.large {
+            width: 3px;
+            height: 3px;
+            animation-duration: 2s;
+            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
+        }
+
+        .star.bright {
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle, #ffffff, #e8f4fd);
+            box-shadow: 
+                0 0 4px rgba(255, 255, 255, 0.9),
+                0 0 8px rgba(232, 244, 253, 0.6);
+            animation-duration: 1.8s;
+        }
+
+        .star.red {
+            width: 2.5px;
+            height: 2.5px;
+            background: radial-gradient(circle, #ff9999, #ff6666);
+            box-shadow: 
+                0 0 6px rgba(255, 102, 102, 0.9),
+                0 0 12px rgba(255, 153, 153, 0.7);
+            animation-duration: 2.2s;
+        }
+
+        .star.warm {
+            width: 2px;
+            height: 2px;
+            background: radial-gradient(circle, #ffcccc, #ff9999);
+            box-shadow: 
+                0 0 4px rgba(255, 153, 153, 0.8),
+                0 0 8px rgba(255, 204, 204, 0.6);
+            animation-duration: 2.8s;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { 
+                opacity: 0.3; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.2);
+            }
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.01) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.01) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.005) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #ffffff;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .header h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            font-weight: 300;
+            margin-top: 25px;
+            font-style: italic;
+        }
+
+        .hearts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+            justify-items: center;
+        }
+
+        .heart-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .heart-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .heart-item:hover::before {
+            left: 100%;
+        }
+
+        .heart-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 5px 15px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .heart-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .heart-svg {
+            width: 100%;
+            height: 100%;
+            fill: #d4af37;
+            filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .heart-item:hover .heart-svg {
+            fill: #e8c547;
+            filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.5));
+            transform: scale(1.1);
+        }
+
+        .heart-date {
+            font-size: 0.95rem;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+
+
+        .letter-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .letter {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            width: 90%;
+            max-width: 650px;
+            border-radius: 25px;
+            position: relative;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.6),
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: scale(0.7) translateY(80px) rotateX(15deg);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            border: 3px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .letter::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 3px;
+            background: linear-gradient(135deg, 
+                rgba(212, 175, 55, 0.6), 
+                rgba(255, 255, 255, 0.3), 
+                rgba(212, 175, 55, 0.4));
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .letter.open {
+            transform: scale(1) translateY(0) rotateX(0deg);
+            opacity: 1;
+        }
+
+        .letter-header {
+            background: linear-gradient(135deg, #0a0a1a, #0f1528, #0a1f3a);
+            color: white;
+            padding: 45px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px 22px 0 0;
+        }
+
+        .letter-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent, 
+                rgba(212, 175, 55, 0.1), 
+                transparent);
+            transform: rotate(45deg);
+            animation: shimmer 6s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .letter-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(212, 175, 55, 0.8), 
+                rgba(255, 255, 255, 0.6),
+                rgba(212, 175, 55, 0.8), 
+                transparent);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .letter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .letter-date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+        }
+
+        .letter-content {
+            padding: 55px 45px;
+            font-size: 1.5rem;
+            line-height: 2.1;
+            color: #1a1a1a;
+            text-align: left;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 400;
+            position: relative;
+            background: #ffffff;
+            text-shadow: none;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+
+        .letter-content::before,
+        .letter-content::after {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(212, 175, 55, 0.2);
+            position: absolute;
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+            font-weight: 400;
+        }
+
+        .letter-content::before {
+            top: 20px;
+            left: 20px;
+        }
+
+        .letter-content::after {
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .letter-close {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 26px;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(15px);
+            z-index: 2;
+            font-weight: 300;
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .letter-close:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1) rotate(90deg);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .no-letters {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.3rem;
+            padding: 80px 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            font-weight: 300;
+        }
+
+        .no-letters small {
+            display: block;
+            margin-top: 15px;
+            font-size: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hearts-container {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 25px;
+            }
+
+            .heart-item {
+                padding: 25px 20px;
+            }
+
+            .heart-icon {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .letter {
+                width: 95%;
+            }
+            
+            .letter-content {
+                padding: 40px 30px;
+                font-size: 1.3rem;
+                line-height: 2.0;
+            }
+
+            .letter-header {
+                padding: 30px;
+            }
+
+            .letter-title {
+                font-size: 2rem;
+            }
+
+            .no-letters {
+                padding: 60px 30px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 2.4rem;
+            }
+
+            .hearts-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+
+            .letter-content {
+                padding: 30px 25px;
+                font-size: 1.2rem;
+                line-height: 1.9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>From Me To You</h1>
+            <p>Select any letter to read your personal message</p>
+        </div>
+
+        <div id="heartsContainer">
+            <div class="no-letters">
+                Your letters will appear here
+                <small>New messages will be displayed as they arrive</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Letter Overlay -->
+    <div id="letterOverlay" class="letter-overlay" onclick="closeLetter(event)">
+        <div class="letter" id="letter" onclick="event.stopPropagation()">
+            <div class="letter-header">
+                <button class="letter-close" onclick="closeLetter()">&times;</button>
+                <div class="letter-title">Personal Message</div>
+                <div class="letter-date" id="letterDate"></div>
+            </div>
+            <div class="letter-content" id="letterContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let letters = [];
+
+        // Create realistic starfield
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 400; // Much denser starfield
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Random star type and brightness with more visible red variations
+                const rand = Math.random();
+                if (rand < 0.4) {
+                    star.classList.add('small');
+                } else if (rand < 0.65) {
+                    star.classList.add('medium');
+                } else if (rand < 0.8) {
+                    star.classList.add('large');
+                } else if (rand < 0.88) {
+                    star.classList.add('bright');
+                } else if (rand < 0.95) {
+                    star.classList.add('red');
+                } else {
+                    star.classList.add('warm');
+                }
+                
+                // Random position
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Random animation delay for natural twinkling
+                star.style.animationDelay = Math.random() * 3 + 's';
+                
+                // Slight random animation duration variation
+                const baseDuration = parseFloat(getComputedStyle(star).animationDuration);
+                star.style.animationDuration = (baseDuration + (Math.random() * 0.5 - 0.25)) + 's';
+                
+                starsContainer.appendChild(star);
+            }
+        }
+
+        function displayHearts() {
+            const container = document.getElementById('heartsContainer');
+            
+            if (letters.length === 0) {
+                container.innerHTML = `
+                    <div class="no-letters">
+                        Your letters will appear here
+                        <small>New messages will be displayed as they arrive</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const heartsGrid = document.createElement('div');
+            heartsGrid.className = 'hearts-container';
+
+            letters.forEach((letter, index) => {
+                const heartItem = document.createElement('div');
+                heartItem.className = 'heart-item';
+                heartItem.onclick = () => openLetter(letter);
+
+                heartItem.innerHTML = `
+                    <div class="heart-icon">
+                        <svg class="heart-svg" viewBox="0 0 24 24">
+                            <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5 2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.04L12,21.35Z"/>
+                        </svg>
+                    </div>
+                    <div class="heart-date">${letter.shortDate}</div>
+                `;
+
+                heartsGrid.appendChild(heartItem);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(heartsGrid);
+        }
+
+        function openLetter(letter) {
+            const overlay = document.getElementById('letterOverlay');
+            const letterElement = document.getElementById('letter');
+            const dateElement = document.getElementById('letterDate');
+            const contentElement = document.getElementById('letterContent');
+
+            dateElement.textContent = letter.date;
+            contentElement.textContent = letter.text;
+
+            overlay.style.display = 'flex';
+            
+            setTimeout(() => {
+                letterElement.classList.add('open');
+            }, 10);
+        }
+
+        function closeLetter(event) {
+            if (event && event.target.id !== 'letterOverlay' && !event.target.classList.contains('letter-close')) {
+                return;
+            }
+            
+            const overlay = document.getElementById('letterOverlay');
+            const letterElement = document.getElementById('letter');
+
+            letterElement.classList.remove('open');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 600);
+        }
+
+        // Close letter with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLetter();
+            }
+        });
+
+        // Demo letters for preview (remove when using real data)
+        letters = [
+            {
+                id: 1,
+                text: "Distance can't change the fact that you're the first thing I think about when I wake up and the last thing on my mind before I sleep.",
+                date: "Monday, August 18, 2025",
+                shortDate: "Aug 18"
+            }
+        ];
+
+        // Initialize
+        createStars();
+        displayHearts();
+    </script>
+</body>
+</html>
